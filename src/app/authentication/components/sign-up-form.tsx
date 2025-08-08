@@ -53,7 +53,7 @@ const SignUpForm = () => {
               toast.error("Email já cadastrado");
             } else {
               toast.error("Erro ao criar conta");
-              form.setError("email", {
+              return form.setError("email", {
                 message: "Email já cadastrado",
               })
             }
