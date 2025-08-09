@@ -1,10 +1,15 @@
 import Image from "next/image";
 
+import CategorySelector from "@/components/common/category-selector";
 import { Header } from "@/components/common/header";
 import ProductsList from "@/components/common/productsList";
 import { db } from "@/db";
 
+
 const Home = async () => {
+
+  const categories = await db.query.categoryTable.findMany({})
+  
   const products = await db.query.productTable.findMany(
     {
       with: {
@@ -32,6 +37,7 @@ const Home = async () => {
        </div>
 
         <ProductsList title="Produtos" products={products} />
+        <CategorySelector categories={categories} />
 
         <div className="px-5">
         <Image
