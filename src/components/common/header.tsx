@@ -61,7 +61,8 @@ export const Header = () => {
                             </span>
                         </div>
                     </div>
-                    <Button variant="outline" asChild size="icon">
+                    <Button variant="outline" asChild size="icon" 
+                    onClick={() => authClient.signOut()}>
                         <Link href="/">
                             <LogOutIcon/>
                         </Link>
