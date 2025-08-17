@@ -16,7 +16,7 @@ interface ProductItemProps {
 const ProductItem = ({ product, containerClassName }: ProductItemProps) => {
   const firstVariant = product.variants[0];
   return (
-    <Link href="/" className="flex flex-col gap-4">
+    <Link href={`/products/${firstVariant.slug}`} className="flex flex-col gap-4">
 
       <Image
         src={typeof firstVariant.imageUrl === 'string' 
