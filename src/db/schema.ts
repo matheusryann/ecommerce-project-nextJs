@@ -1,6 +1,7 @@
 import { relations } from "drizzle-orm";
 import { boolean,integer, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 
+
 export const userTable = pgTable("user", {
   id: text('id').primaryKey(),
   name: text('name').notNull(),
@@ -11,8 +12,12 @@ createdAt: timestamp('created_at').$defaultFn(() => /* @__PURE__ */ new Date()).
 updatedAt: timestamp('updated_at').$defaultFn(() => /* @__PURE__ */ new Date()).notNull()
 });
 
-export const userRelations = relations(userTable, ({ many }) => ({
+export const userRelations = relations(userTable, ({ many, one }) => ({
   shippingAndress: many(shippingAndressTable),
+  cart: one(cartTable, {
+    fields: [userTable.id],
+    references: [cartTable.userId],
+  }),
 }));
 
 export const sessionTable = pgTable("session", {
@@ -138,5 +143,64 @@ export const shippingAndressRelations = relations(shippingAndressTable, ({ one }
   user: one(userTable, {
     fields: [shippingAndressTable.userId],
     references: [userTable.id],
+  }),
+  cart: one(cartTable, {
+    fields: [shippingAndressTable.id],
+    references: [cartTable.shippingAndressId],
+  }),
+}))
+
+
+export const cartTable = pgTable("cart", {
+  id: uuid().primaryKey().defaultRandom(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => userTable.id, {
+      onDelete: "cascade",
+    }),
+  shippingAndressId: uuid("shipping_andress_id").references(() => shippingAndressTable.id, {
+    onDelete: "set null",
+  }),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+
+export const cartRelations = relations(cartTable, ({ one, many }) => ({
+  user: one(userTable, {
+    fields: [cartTable.userId],
+    references: [userTable.id],
+  }),
+  shippingAndress: one(shippingAndressTable, {
+    fields: [cartTable.shippingAndressId],
+    references: [shippingAndressTable.id],
+  }),
+  items: many(cartItemTable),
+}));
+
+
+export const cartItemTable = pgTable("cart_item", {
+  id: uuid().primaryKey().defaultRandom(),
+  cartId: uuid("cart_id")
+    .notNull()
+    .references(() => cartTable.id, {
+      onDelete: "cascade",
+    }),
+    productVariantId: uuid("product_variant_id")
+    .notNull()
+    .references(() => productVariantTable.id, {
+      onDelete: "cascade",
+    }),
+    quantity: integer("quantity").notNull().default(1),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+export const cartItemRelations = relations(cartItemTable, ({ one }) => ({
+  cart: one(cartTable, {
+    fields: [cartItemTable.cartId],
+    references: [cartTable.id],
+  }),
+  productVariant: one(productVariantTable, {
+    fields: [cartItemTable.productVariantId],
+    references: [productVariantTable.id],
   }),
 }))
