@@ -56,6 +56,7 @@ if(cartItem) {
     }).where(eq(cartItemTable.id, cartItem.id));
     return;
 }
+
 await db.insert(cartItemTable).values({
     cartId,
     productVariantId: data.productVariantId,
