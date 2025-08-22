@@ -19,11 +19,15 @@ export const getCart = async () => {
         with: {
             items: {
                 with: {
-                    productVariant: true,
+                    productVariant: {
+                        with: {
+                            product: true,
+                        },
+                    },
                 },
             },
         },
-});
+    });
 if(!cart) { 
     const [newCart] = await db.insert(cartTable).values({
         userId: session.user.id,
