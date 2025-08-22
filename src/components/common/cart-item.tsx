@@ -1,9 +1,9 @@
 import { MinusIcon, PlusIcon } from "lucide-react";
+import { TrashIcon } from "lucide-react";
 import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
-
-
+import { formatCentsToBRL } from "@/helpers/money";
 
 interface CartItemProps {
     id: string;
@@ -33,20 +33,27 @@ const CartItem = ({
             alt={productVariantName}
             width={78}
             height={78}
+            className="rounded-lg"
             />
             <div className="flex flex-col gap-1">
                 <p className="text-sm font-semibold">{productName}</p>
                 <p className="text-muted-foreground text-xs font-medium">{productVariantName}</p>
-                <div className="flex items-center border justify-between rounded-lg w-[100px]">
+                <div className="flex items-center border justify-between rounded-lg w-[100px] p-1">
                 <Button className="h-4 w-4" variant="ghost" onClick={() => {}}>
-                    <MinusIcon/>
+                    <MinusIcon size={12}/>
                 </Button>
-                <p>{quantity}</p>
+                <p className="text-xs">{quantity}</p>
                 <Button className="h-4 w-4" variant="ghost" onClick={() => {}}>
-                    <PlusIcon/>
+                    <PlusIcon size={12}/>
                 </Button>
             </div>	
             </div>
+         </div>
+         <div className="flex flex-col justify-center gap-1 items-end">
+         <Button variant="outline" size="icon">
+            <TrashIcon size={12}/>
+         </Button>
+         <p className="text-sm font-semibold">{formatCentsToBRL(productVariantPriceInCents)}</p>
          </div>
         </div>
     )

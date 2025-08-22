@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query"
 import { ShoppingBasketIcon } from "lucide-react" 
+import Image from "next/image"
 
 import { getCart } from "@/actions/get-cart"
 import { Button } from "@/components/ui/button"
@@ -26,7 +27,7 @@ const Cart = () => {
       Carrinho
         </SheetTitle>
       </SheetHeader>
-      <div>
+      <div className="space-y-4 px-5">
         {cartIsLoading && <div>Carregando...</div>}
         {cart?.items.map((item) => (
           <CartItem 
