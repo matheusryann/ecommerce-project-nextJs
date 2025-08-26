@@ -1,13 +1,16 @@
 import { MinusIcon, PlusIcon } from "lucide-react";
 import { TrashIcon } from "lucide-react";
 import Image from "next/image";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { formatCentsToBRL } from "@/helpers/money";
+import { useRemoveProductFromCart } from "@/hooks/mutations/use-remove-product-from-cart";
 
 interface CartItemProps {
     id: string;
     productName: string;
+    productVariantId: string;
     productVariantImageUrl: string;
     productVariantName: string;
     productVariantPriceInCents: number;
@@ -19,11 +22,25 @@ const CartItem = ({
     id, 
     productName, 
     productVariantImageUrl, 
-    productVariantName, 
+    productVariantName,
+    productVariantId,
     productVariantPriceInCents, 
     quantity,
 
 }: CartItemProps) => { 
+
+    const removeProductFromCartMutation = useRemoveProductFromCart(id);
+
+    const handleDeleteClick = () => {
+        removeProductFromCartMutation.mutate(undefined, {
+          onSuccess: () => {
+            toast.success("Produto removido do carrinho.");
+          },
+          onError: () => {
+            toast.error("Erro ao remover produto do carrinho.");
+          },
+        });
+      };
 
     return (
         <div className="flex items-center justify-between">
@@ -42,7 +59,7 @@ const CartItem = ({
                 <Button className="h-4 w-4" variant="ghost" onClick={() => {}}>
                     <MinusIcon size={12}/>
                 </Button>
-                <p className="text-xs">{quantity}</p>
+                <p className="text-xs font-medium">{quantity}</p>
                 <Button className="h-4 w-4" variant="ghost" onClick={() => {}}>
                     <PlusIcon size={12}/>
                 </Button>
@@ -50,7 +67,7 @@ const CartItem = ({
             </div>
          </div>
          <div className="flex flex-col justify-center gap-1 items-end">
-         <Button variant="outline" size="icon">
+         <Button variant="outline" size="icon" onClick={handleDeleteClick}>
             <TrashIcon size={12}/>
          </Button>
          <p className="text-sm font-semibold">{formatCentsToBRL(productVariantPriceInCents)}</p>

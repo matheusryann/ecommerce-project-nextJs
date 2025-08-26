@@ -13,7 +13,7 @@ updatedAt: timestamp('updated_at').$defaultFn(() => /* @__PURE__ */ new Date()).
 });
 
 export const userRelations = relations(userTable, ({ many, one }) => ({
-  shippingAndress: many(shippingAndressTable),
+  shippingAddress: many(shippingAddressTable),
   cart: one(cartTable, {
     fields: [userTable.id],
     references: [cartTable.userId],
@@ -116,7 +116,7 @@ export const productVariantRelations = relations(
 );
 
 
-export const shippingAndressTable = pgTable("shipping_andress", {
+export const shippingAddressTable = pgTable("shipping_andress", {
   id: uuid().primaryKey().defaultRandom(),
   userId: text("user_id")
     .notNull()
@@ -139,13 +139,13 @@ export const shippingAndressTable = pgTable("shipping_andress", {
 })
 
 
-export const shippingAndressRelations = relations(shippingAndressTable, ({ one }) => ({
+export const shippingAddressRelations = relations(shippingAddressTable, ({ one }) => ({
   user: one(userTable, {
-    fields: [shippingAndressTable.userId],
+    fields: [shippingAddressTable.userId],
     references: [userTable.id],
   }),
   cart: one(cartTable, {
-    fields: [shippingAndressTable.id],
+    fields: [shippingAddressTable.id],
     references: [cartTable.shippingAndressId],
   }),
 }))
@@ -158,7 +158,7 @@ export const cartTable = pgTable("cart", {
     .references(() => userTable.id, {
       onDelete: "cascade",
     }),
-  shippingAndressId: uuid("shipping_andress_id").references(() => shippingAndressTable.id, {
+  shippingAndressId: uuid("shipping_andress_id").references(() => shippingAddressTable.id, {
     onDelete: "set null",
   }),
   createdAt: timestamp("created_at").notNull().defaultNow(),
@@ -170,9 +170,9 @@ export const cartRelations = relations(cartTable, ({ one, many }) => ({
     fields: [cartTable.userId],
     references: [userTable.id],
   }),
-  shippingAndress: one(shippingAndressTable, {
+  shippingAndress: one(shippingAddressTable, {
     fields: [cartTable.shippingAndressId],
-    references: [shippingAndressTable.id],
+    references: [shippingAddressTable.id],
   }),
   items: many(cartItemTable),
 }));
