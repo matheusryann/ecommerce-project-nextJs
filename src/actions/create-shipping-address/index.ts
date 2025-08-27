@@ -20,7 +20,7 @@ export const createShippingAddress = async (data: CreateShippingAddressSchema) =
     }
 
     const [shippingAddress] = await db.insert(shippingAddressTable).values({
-        userId: session.user.id,
+      userId: session.user.id,
       recipientName: data.fullName,
       street: data.address,
       number: data.number,
