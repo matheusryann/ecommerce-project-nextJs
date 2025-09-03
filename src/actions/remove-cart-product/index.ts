@@ -1,3 +1,5 @@
+"use server";
+
 import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import { z } from "zod";

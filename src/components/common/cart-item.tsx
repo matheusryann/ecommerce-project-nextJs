@@ -3,11 +3,10 @@ import { TrashIcon } from "lucide-react";
 import Image from "next/image";
 import { toast } from "sonner";
 
-import { useIncreaseCartProduct } from "@/hooks/mutations/use-increase-cart-product";
-
 import { Button } from "@/components/ui/button";
 import { formatCentsToBRL } from "@/helpers/money";
 import { useDecreaseCartProduct } from "@/hooks/mutations/use-decrease-cart-product";
+import { useIncreaseCartProduct } from "@/hooks/mutations/use-increase-cart-product";
 import { useRemoveProductFromCart } from "@/hooks/mutations/use-remove-product-from-cart";
 
 
