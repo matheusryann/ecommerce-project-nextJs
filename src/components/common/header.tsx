@@ -11,7 +11,7 @@ import { Avatar, AvatarFallback,AvatarImage } from '../ui/avatar'
 import { Button } from '../ui/button'
 import { Sheet, SheetContent, SheetTrigger } from '../ui/sheet'
 import { SheetHeader, SheetTitle } from '../ui/sheet'
-import Cart from './cart'
+import { Cart } from './cart'
 
 export const Header = () => {
     const {data: session} = authClient.useSession();

@@ -120,3 +120,28 @@
     @apply bg-background text-foreground;
   }
 }
+
+@keyframes marqueeX {
+  from { transform: translate3d(0,0,0); }
+  to   { transform: translate3d(-100%,0,0); } /* anda 100% da largura do trilho */
+}
+
+/* container do marquee */
+.marquee { position: relative; overflow: hidden; }
+
+/* um trilho (linha) */
+.marquee-track {
+  display: inline-flex;           /* linha única */
+  gap: 1rem;                      /* ~ gap-4 */
+  white-space: nowrap;
+  animation: marqueeX 24s linear infinite;
+  will-change: transform;
+  backface-visibility: hidden;
+  transform: translate3d(0,0,0);
+}
+
+/* segundo trilho inicia colado ao fim do primeiro */
+.marquee-track--alt { position: absolute; top: 0; left: 100%; }
+
+
+
