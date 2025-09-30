@@ -13,6 +13,7 @@ import {
     DialogTitle,
   } from "@/components/ui/dialog";
 
+
 const CheckoutSucessPage = () => {
     return (
     <>
@@ -33,8 +34,9 @@ const CheckoutSucessPage = () => {
           </DialogDescription>
 
           <DialogFooter>
-            <Button className="rounded-full" size="lg">
-              Ver meus pedidos
+            <Button className="rounded-full" size="lg" asChild>
+              <Link> Ver meus pedidos</Link>
+            
             </Button>
             <Button
               className="rounded-full"
