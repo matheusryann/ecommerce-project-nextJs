@@ -11,13 +11,11 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { authClient } from "@/lib/auth-client";
+import { signUpSchema } from "@/lib/sign-up-schema";
 
-const formSchema = z.object ({
-    name: z.string("Nome é obrigatório").trim().min(1, "Nome é obrigatório"),
-    email: z.email("Email inválido"),
-    password: z.string("Senha inválida").min(8),
-    confirmPassword: z.string("Senha inválida").min(8, "Senha inválida")
-,})
+const formSchema = signUpSchema.extend({
+  confirmPassword: z.string("Senha inválida")
+})
 .refine((data) => {
     return data.password === data.confirmPassword
 }, {
@@ -109,7 +107,7 @@ return (
                 <FormItem>
                   <FormLabel>Senha</FormLabel>
                   <FormControl>
-                    <Input placeholder="Digite sua senha" {...field} type="password'" />
+                    <Input placeholder="Digite sua senha" {...field} type="password" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

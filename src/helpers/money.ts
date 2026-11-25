@@ -3,4 +3,4 @@ export const formatCentsToBRL = (price: number) => {
         style: "currency",
         currency: "BRL",
     }).format(price / 100);
-}
+};

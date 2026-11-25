@@ -1,5 +1,7 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { APIError, createAuthMiddleware } from "better-auth/api"
+import { signUpSchema } from "@/lib/sign-up-schema";
 
 import { db } from "@/db"; // your drizzle instance
 ;
@@ -30,6 +32,19 @@ export const auth = betterAuth({
     verification: {
         modelName: "verificationTable",
     },
+    hooks: {
+        before: createAuthMiddleware(async (ctx) => {
+            if (ctx.path !== '/sign-up/email') {
+                return;
+            }
+            const result = signUpSchema.safeParse(ctx.body);
+            if (!result.success) {
+                throw new APIError("BAD_REQUEST", {
+                    message: result.error.issues[0].message,
+                });
+            }
+        }),
+    }
     
     
 });
