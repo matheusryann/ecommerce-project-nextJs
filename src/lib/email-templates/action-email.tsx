@@ -1,8 +1,11 @@
 import { render } from "@react-email/render";
 import type { CSSProperties } from "react";
 
-interface VerificationEmailProps {
-  name: string;
+interface ActionEmailProps {
+  heading: string;
+  message: string;
+  buttonLabel: string;
+  hint: string;
   url: string;
 }
 
@@ -47,34 +50,21 @@ const styles = {
   },
 } satisfies Record<string, CSSProperties>;
 
-const VerificationEmail = ({ name, url }: VerificationEmailProps) => (
+const ActionEmail = ({ heading, message, buttonLabel, hint, url }: ActionEmailProps) => (
   <html lang="pt-BR">
     <body style={styles.body}>
       <table role="presentation" width="100%" cellPadding={0} cellSpacing={0}>
         <tbody>
           <tr>
             <td align="center">
-              <table
-                role="presentation"
-                cellPadding={0}
-                cellSpacing={0}
-                style={styles.card}
-              >
+              <table role="presentation" cellPadding={0} cellSpacing={0} style={styles.card}>
                 <tbody>
                   <tr>
                     <td>
-                      <h1 style={styles.heading}>Confirme seu e-mail</h1>
-                      <p style={styles.text}>
-                        Olá, {name}! Falta só um passo para ativar sua conta na
-                        Bewear.
-                      </p>
-                      <a href={url} style={styles.button}>
-                        Confirmar e-mail
-                      </a>
-                      <p style={styles.hint}>
-                        O link expira em 1 hora. Se você não criou esta conta,
-                        ignore este e-mail.
-                      </p>
+                      <h1 style={styles.heading}>{heading}</h1>
+                      <p style={styles.text}>{message}</p>
+                      <a href={url} style={styles.button}>{buttonLabel}</a>
+                      <p style={styles.hint}>{hint}</p>
                     </td>
                   </tr>
                 </tbody>
@@ -86,6 +76,5 @@ const VerificationEmail = ({ name, url }: VerificationEmailProps) => (
     </body>
   </html>
 );
-
-export const renderVerificationEmail = (props: VerificationEmailProps) =>
-  render(<VerificationEmail {...props} />);
+export const renderActionEmail = (props: ActionEmailProps) =>
+  render(<ActionEmail {...props} />);

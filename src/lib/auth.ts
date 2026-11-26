@@ -4,9 +4,16 @@ import { APIError, createAuthMiddleware } from "better-auth/api"
 
 import { db } from "@/db";
 import {sendEmail} from "@/lib/email";
-import {renderVerificationEmail} from "@/lib/email-templates/verification-email";
+import {renderVerificationEmail, renderResetPasswordEmail} from "@/lib/email-templates/auth-email";
+import { resetPasswordSchema } from "./reset-password-schema";
 import { signUpSchema } from "@/lib/sign-up-schema";
 
+
+
+const bodySchemaByPath = {
+    "/sign-up/email": signUpSchema,
+    "/reset-password": resetPasswordSchema,
+} as const;
 
  
 export const auth = betterAuth({
@@ -14,7 +21,18 @@ export const auth = betterAuth({
         enabled: true,
         requireEmailVerification: true,
         minPasswordLength: 8,
-        maxPasswordLength: 20, 
+        maxPasswordLength: 128,
+        resetPasswordTokenExpiresIn: 3600,
+        revokeSessionsOnPasswordReset: true,
+        sendResetPassword: async ({user, url}) => {
+            void renderResetPasswordEmail({name: user.name, url}).then((html) => 
+                sendEmail({
+                    to: user.email,
+                    subject: "Redefina sua senha - Bewear",
+                    html,
+                }),
+            )
+    }
       }, 
     emailVerification: {
         sendOnSignUp: true,
@@ -53,17 +71,15 @@ export const auth = betterAuth({
     },
     hooks: {
         before: createAuthMiddleware(async (ctx) => {
-            if (ctx.path !== '/sign-up/email') {
-                return;
-            }
-            const result = signUpSchema.safeParse(ctx.body);
+            const schema = bodySchemaByPath[ctx.path as keyof typeof bodySchemaByPath];
+            if (!schema) return;
+            const result = schema.safeParse(ctx.body);
             if (!result.success) {
                 throw new APIError("BAD_REQUEST", {
-                    message: result.error.issues[0].message,
-                });
+                    message: result.error.issues[0].message
+                })
             }
         }),
     }
-    
     
 });
