@@ -1,15 +1,34 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { APIError, createAuthMiddleware } from "better-auth/api"
+
+import { db } from "@/db";
+import {sendEmail} from "@/lib/email";
+import {renderVerificationEmail} from "@/lib/email-templates/verification-email";
 import { signUpSchema } from "@/lib/sign-up-schema";
 
-import { db } from "@/db"; // your drizzle instance
-;
+
  
 export const auth = betterAuth({
     emailAndPassword: { 
-        enabled: true, 
+        enabled: true,
+        requireEmailVerification: true,
+        minPasswordLength: 8,
+        maxPasswordLength: 20, 
       }, 
+    emailVerification: {
+        sendOnSignUp: true,
+        sendOnSignIn: true,
+        autoSignInAfterVerification: true,
+        sendVerificationEmail: async ({ user, url }) => {
+            const html = await renderVerificationEmail({ name: user.name, url });
+            void sendEmail({
+                to: user.email,
+                subject: "Confirme seu e-mail - Bewear",
+                html,
+            });
+        },
+    },   
     database: drizzleAdapter(db, {
         provider: "pg", 
     }),
